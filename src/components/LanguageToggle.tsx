@@ -15,11 +15,11 @@ export function LanguageToggle() {
   const locale = useLocale();
   const t = useTranslations();
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || '';
 
-  const changeLanguage = (newLocale: string) => {
-    router.push(pathname, { locale: newLocale });
-  };
+    const changeLanguage = (newLocale: string) => {
+      router.replace(pathname, { locale: newLocale });
+    };
 
   return (
     <DropdownMenu>

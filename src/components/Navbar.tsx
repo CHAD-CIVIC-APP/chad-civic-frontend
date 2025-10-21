@@ -1,9 +1,8 @@
 'use client'
 
-import { Link } from "@/i18n/navigation";
-import { usePathname } from "@/i18n/navigation";
+import Link from "next/link";
+    import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { LanguageToggle } from "./LanguageToggle";
 import { motion } from "framer-motion";
 import { Building2, Menu } from "lucide-react";
 import { useState } from "react";
