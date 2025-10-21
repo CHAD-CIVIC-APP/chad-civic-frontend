@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Users, MapPin, Briefcase } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 
 export function Hero() {
   const t = useTranslations();

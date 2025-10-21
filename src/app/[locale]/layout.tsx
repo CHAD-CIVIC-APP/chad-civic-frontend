@@ -33,13 +33,10 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
   
-  // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale)) {
     notFound();
   }
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
   const messages = await getMessages();
 
   return (

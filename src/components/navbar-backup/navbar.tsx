@@ -5,7 +5,6 @@ import ThemeToggle from "../common/theme-toggle";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
-import { Building2 } from "lucide-react";
 import SVGLogo from '@/components/common/SVGLogo'
 
 export const Navbar = () => {
