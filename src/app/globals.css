@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+Most colors use HSL, but background uses OKLCH for better color consistency.
+*/
+
+@layer base {
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: 215 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Chad Government Primary: #002664 */
+    --primary: 215 100% 20%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 215 85% 35%;
+    --primary-lighter: 215 70% 50%;
+
+    /* Elegant accent - Amber/Gold */
+    --accent: 38 92% 50%;
+    --accent-foreground: 215 100% 20%;
+    --accent-light: 38 85% 65%;
+
+    --secondary: 215 20% 92%;
+    --secondary-foreground: 215 25% 15%;
+
+    --muted: 215 15% 95%;
+    --muted-foreground: 215 15% 45%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 215 20% 88%;
+    --input: 215 20% 88%;
+    --ring: 215 100% 20%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(215 100% 20%) 0%, hsl(215 85% 35%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(38 85% 65%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(215 20% 98%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-elegant: 0 10px 30px -10px hsl(215 100% 20% / 0.15);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 215 25% 15%;
+    --sidebar-primary: 215 100% 20%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 20% 92%;
+    --sidebar-accent-foreground: 215 25% 15%;
+    --sidebar-border: 215 20% 88%;
+    --sidebar-ring: 215 100% 20%;
+  }
+
+  .dark {
+    --background: oklch(0.141 0.005 285.823);
+    --foreground: 0 0% 95%;
+
+    --card: 215 25% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 215 25% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 215 85% 55%;
+    --primary-foreground: 215 30% 8%;
+    --primary-light: 215 70% 65%;
+    --primary-lighter: 215 60% 75%;
+
+    --accent: 38 92% 50%;
+    --accent-foreground: 215 30% 8%;
+    --accent-light: 38 85% 65%;
+
+    --secondary: 215 20% 18%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 215 20% 15%;
+    --muted-foreground: 215 10% 60%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 215 20% 22%;
+    --input: 215 20% 22%;
+    --ring: 215 85% 55%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(215 85% 55%) 0%, hsl(215 70% 65%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(38 85% 65%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(215 25% 12%) 0%, hsl(215 30% 10%) 100%);
+
+    /* Dark mode shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --shadow-elegant: 0 10px 30px -10px hsl(215 85% 55% / 0.3);
+
+    --sidebar-background: 215 30% 8%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 215 85% 55%;
+    --sidebar-primary-foreground: 215 30% 8%;
+    --sidebar-accent: 215 20% 18%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 215 20% 22%;
+    --sidebar-ring: 215 85% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Smooth transitions for theme switching */
+  * {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+}

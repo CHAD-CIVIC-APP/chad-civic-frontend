@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 23, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/i18n/routing.ts"],"sourcesContent":["import { defineRouting } from \"next-intl/routing\";\n\nexport const routing = defineRouting({\n    // A list of all locales that are supported\n    locales: [\"en\", \"fr\"],\n\n    // Used when no locale matches\n    defaultLocale: \"en\",\n    localePrefix: 'as-needed',\n\n});\n"],"names":[],"mappings":";;;AAAA;;AAEO,MAAM,UAAU,CAAA,GAAA,0OAAA,CAAA,gBAAa,AAAD,EAAE;IACjC,2CAA2C;IAC3C,SAAS;QAAC;QAAM;KAAK;IAErB,8BAA8B;IAC9B,eAAe;IACf,cAAc;AAElB"}},
+    {"offset": {"line": 44, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/middleware.ts"],"sourcesContent":["import createMiddleware from 'next-intl/middleware';\nimport { routing } from './i18n/routing';\n\nexport default createMiddleware(routing);\n\nexport const config = {\n  // Match only internationalized pathnames\n  matcher: [\n    '/((?!api|_next|_vercel|.*\\\\..*).*)'\n  ]\n};\n"],"names":[],"mappings":";;;;AAAA;AACA;;;uCAEe,CAAA,GAAA,8LAAA,CAAA,UAAgB,AAAD,EAAE,8HAAA,CAAA,UAAO;AAEhC,MAAM,SAAS;IACpB,yCAAyC;IACzC,SAAS;QACP;KACD;AACH"}}]
+}
