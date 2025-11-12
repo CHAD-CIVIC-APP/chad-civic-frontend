@@ -1,6 +1,5 @@
 'use client'
 
-// import { Navbar } from "@/components/navbar/navbar"
 import { Hero } from "@/components/Hero"
 import { AnnouncementTicker } from "@/components/AnnouncementTicker"
 

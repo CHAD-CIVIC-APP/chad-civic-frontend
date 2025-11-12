@@ -1,11 +1,9 @@
 'use client'
 
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { api } from "@/lib/api";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -21,6 +19,7 @@ import {
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { use } from "react";
+import { useOfficial } from "@/hooks/use-officials";
 
 interface PageProps {
   params: Promise<{
@@ -31,12 +30,7 @@ interface PageProps {
 export default function OfficialDetailPage({ params }: PageProps) {
   const { id } = use(params);
   const t = useTranslations();
-
-  const { data: official, isLoading } = useQuery({
-    queryKey: ['official', id],
-    queryFn: () => api.officials.getById(Number(id)),
-    enabled: !!id,
-  });
+  const { data: official, isLoading } = useOfficial(id);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -116,18 +110,18 @@ export default function OfficialDetailPage({ params }: PageProps) {
                   <Briefcase className="h-5 w-5 text-primary" />
                   <div>
                     <div className="text-xs text-muted-foreground">{t('search.party')}</div>
-                    <div className="font-medium">{official.politicalParty?.name}</div>
+                    <div className="font-medium">{official.political_party?.name}</div>
                   </div>
                 </div>
 
-                {official.termStart && (
+                {official.termStartDate && (
                   <div className="flex items-center gap-3 rounded-lg bg-muted p-4">
                     <Calendar className="h-5 w-5 text-primary" />
                     <div>
                       <div className="text-xs text-muted-foreground">{t('official.term')}</div>
                       <div className="font-medium">
-                        {new Date(official.termStart).getFullYear()}
-                        {official.termEnd && ` - ${new Date(official.termEnd).getFullYear()}`}
+                        {new Date(official.termStartDate).getFullYear()}
+                        {official.termEndDate && ` - ${new Date(official.termEndDate).getFullYear()}`}
                       </div>
                     </div>
                   </div>

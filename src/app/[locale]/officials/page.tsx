@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { AnnouncementTicker } from "@/components/AnnouncementTicker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,49 +11,56 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { api, ElectedOfficial } from "@/lib/api";
 import { motion } from "framer-motion";
 import { Search, Mail, Phone, MapPin, Briefcase, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
+import { usePoliticalParties, usePositions, useRegions } from "@/hooks/use-common";
+import { useOfficials } from "@/hooks/use-officials";
+import type { ElectedOfficial } from "@/models";
+import { useQueryState, parseAsString } from "nuqs";
+import { useDebounce } from "use-debounce";
 
 export default function OfficialsPage() {
   const t = useTranslations();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState<string>("");
-  const [selectedPosition, setSelectedPosition] = useState<string>("");
-  const [selectedParty, setSelectedParty] = useState<string>("");
+  const [searchInput, setSearchInput] = useQueryState(
+    'search',
+    parseAsString
+  );
+  const [regionCode, setRegionCode] = useQueryState(
+    'region',
+    parseAsString
+  );
+  const [positionCode, setPositionCode] = useQueryState(
+    'position',
+    parseAsString
+  );
+  const [partyAbbr, setPartyAbbr] = useQueryState(
+    'political_party',
+    parseAsString
+  );
 
-  const { data: officials, isLoading: officialsLoading } = useQuery({
-    queryKey: ['officials'],
-    queryFn: api.officials.getAll,
-  });
+  const [debouncedSearch] = useDebounce(searchInput, 1000);
 
-  const { data: regions } = useQuery({
-    queryKey: ['regions'],
-    queryFn: api.regions.getAll,
-  });
+  const { data: regions } = useRegions();
+  const { data: positions } = usePositions();
+  const { data: parties } = usePoliticalParties();
 
-  const { data: positions } = useQuery({
-    queryKey: ['positions'],
-    queryFn: api.positions.getAll,
-  });
+  const regionId = regionCode ? regions?.find(r => r.code === regionCode)?.id : undefined;
+  const positionId = positionCode ? positions?.find(p => p.code === positionCode)?.id : undefined;
+  const partyId = partyAbbr ? parties?.find(p => p.abbreviation === partyAbbr)?.id : undefined;
 
-  const { data: parties } = useQuery({
-    queryKey: ['politicalParties'],
-    queryFn: api.politicalParties.getAll,
-  });
+  const queryParams = {
+    search: debouncedSearch || undefined,
+    filters: {
+      ...(regionId ? { region: regionId } : {}),
+      ...(positionId ? { position: positionId } : {}),
+      ...(partyId ? { political_party: partyId } : {}),
+    },
+  };
 
-  const filteredOfficials = officials?.filter((official: ElectedOfficial) => {
-    const matchesSearch = searchQuery
-      ? `${official.firstName} ${official.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
-    const matchesRegion = selectedRegion ? official.region?.id.toString() === selectedRegion : true;
-    const matchesPosition = selectedPosition ? official.position?.id.toString() === selectedPosition : true;
-    const matchesParty = selectedParty ? official.politicalParty?.id.toString() === selectedParty : true;
-    return matchesSearch && matchesRegion && matchesPosition && matchesParty && official.published;
-  });
+  const { data: officials, isLoading: officialsLoading } = useOfficials(queryParams);
 
   return (
     <div className="min-h-screen bg-background">
@@ -75,62 +80,72 @@ export default function OfficialsPage() {
               <Input
                 type="text"
                 placeholder={t('search.placeholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchInput || ''}
+                onChange={(e) => setSearchInput(e.target.value || null)}
                 className="pl-10"
               />
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+              <Select 
+                value={regionCode || "all"} 
+                onValueChange={(value) => setRegionCode(value === "all" ? null : value)}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder={t('search.region')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('search.allRegions')}</SelectItem>
-                  {regions?.filter(r => r.isActive).map((region) => (
-                    <SelectItem key={region.id} value={region.id.toString()}>
-                      {region.name}
+                  {regions?.map((r) => (
+                    <SelectItem key={r.id} value={r.code}>
+                      {r.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={selectedPosition} onValueChange={setSelectedPosition}>
+              <Select 
+                value={positionCode || "all"} 
+                onValueChange={(value) => setPositionCode(value === "all" ? null : value)}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder={t('search.position')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('search.allPositions')}</SelectItem>
-                  {positions?.filter(p => p.isActive).map((position) => (
-                    <SelectItem key={position.id} value={position.id.toString()}>
-                      {position.name}
+                  {positions?.map((p) => (
+                    <SelectItem key={p.id} value={p.code}>
+                      {p.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              <Select value={selectedParty} onValueChange={setSelectedParty}>
+              <Select 
+                value={partyAbbr || "all"} 
+                onValueChange={(value) => setPartyAbbr(value === "all" ? null : value)}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder={t('search.party')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('search.allParties')}</SelectItem>
-                  {parties?.filter(p => p.isActive).map((party) => (
-                    <SelectItem key={party.id} value={party.id.toString()}>
-                      {party.abbreviation}
+                  {parties?.map((p) => (
+                    <SelectItem key={p.id} value={p.abbreviation}>
+                      {p.abbreviation}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              {(selectedRegion || selectedPosition || selectedParty) && (
+              {(regionCode || positionCode || partyAbbr || searchInput) && (
                 <Button
                   variant="ghost"
                   onClick={() => {
-                    setSelectedRegion("");
-                    setSelectedPosition("");
-                    setSelectedParty("");
+                    setSearchInput(null);
+                    setRegionCode(null);
+                    setPositionCode(null);
+                    setPartyAbbr(null);
                   }}
                 >
                   Clear filters
@@ -142,7 +157,7 @@ export default function OfficialsPage() {
 
         {officialsLoading ? (
           <div className="text-center py-12 text-muted-foreground">{t('loading')}</div>
-        ) : filteredOfficials?.length === 0 ? (
+        ) : officials?.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">{t('search.noResults')}</div>
         ) : (
           <motion.div
@@ -150,14 +165,14 @@ export default function OfficialsPage() {
             animate={{ opacity: 1 }}
             className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
-            {filteredOfficials?.map((official: ElectedOfficial, index: number) => (
+            {officials?.map((official: ElectedOfficial, index: number) => (
               <motion.div
                 key={official.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Link href={`/officials/${official.id}`}>
+                <Link href={`/officials/${official.documentId}`}>
                   <Card className="group overflow-hidden transition-all hover:shadow-elegant">
                     <div className="p-6">
                       <div className="mb-4 flex items-start justify-between">
@@ -183,7 +198,7 @@ export default function OfficialsPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <Briefcase className="h-4 w-4" />
-                          <span>{official.politicalParty?.abbreviation}</span>
+                          <span>{official.political_party?.abbreviation}</span>
                         </div>
                         {official.email && (
                           <div className="flex items-center gap-2">

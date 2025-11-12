@@ -1,21 +1,28 @@
 'use client'
 
-import { useQuery } from "@tanstack/react-query";
-import { api, Announcement } from "@/lib/api";
+import { useAnnouncements } from "@/hooks/use-announcements";
 import { motion } from "framer-motion";
 import { Megaphone, ExternalLink } from "lucide-react";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { useMemo } from "react";
 
 export function AnnouncementTicker() {
   const t = useTranslations();
-  const { data: announcements } = useQuery<Announcement[]>({
-    queryKey: ['announcements'],
-    queryFn: api.announcements.getAll,
+  const locale = useLocale();
+  
+  const { data: announcements } = useAnnouncements({
+    filters: {
+      locale,
+    },
+    sort: 'publishedAt:desc',
+    pageSize: 4,
   });
 
-  const publishedAnnouncements = announcements?.filter(a => a.isPublished).slice(0, 5) || [];
+  const latestAnnouncements = useMemo(() => {
+    return announcements?.slice(0, 4) || [];
+  }, [announcements]);
 
-  if (!publishedAnnouncements.length) return null;
+  if (!latestAnnouncements.length) return null;
 
   return (
     <div className="overflow-hidden border-b border-t bg-accent/10 py-2.5">
@@ -23,7 +30,7 @@ export function AnnouncementTicker() {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2 text-accent">
             <Megaphone className="h-4 w-4 animate-pulse" />
-            <span className="text-xs font-semibold uppercase tracking-wide">{t('announcements.title')}</span>
+            <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wide">{t('announcements.title')}</span>
           </div>
           <div className="flex-1 overflow-hidden">
             <motion.div
@@ -35,9 +42,9 @@ export function AnnouncementTicker() {
               }}
               className="flex space-x-8 whitespace-nowrap"
             >
-              {[...publishedAnnouncements, ...publishedAnnouncements].map((announcement, idx) => (
+              {[...latestAnnouncements, ...latestAnnouncements].map((announcement, idx) => (
                 <a
-                  key={`${announcement.id}-${idx}`}
+                  key={`${announcement.documentId}-${idx}`}
                   href={announcement.externalLink || '#'}
                   target="_blank"
                   rel="noopener noreferrer"

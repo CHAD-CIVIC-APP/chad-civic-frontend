@@ -6,6 +6,8 @@ import { Providers } from './providers'
 import Footer from '../../components/footer'
 import { Geist, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
+import { NoTranslateMeta } from "@/components/NoTranslateMeta";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,16 +42,19 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background flex flex-col font-sans`}>
+    <html lang={locale} suppressHydrationWarning translate="no">
+      <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background flex flex-col font-sans notranslate`}>
+        <NoTranslateMeta />
         <NextIntlClientProvider messages={messages}>
-          <Providers>
-            <Navbar />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </Providers>
+          <NuqsAdapter>
+            <Providers>
+              <Navbar />
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </Providers>
+          </NuqsAdapter>
         </NextIntlClientProvider>
       </body>
     </html>
