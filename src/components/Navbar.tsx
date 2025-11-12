@@ -1,7 +1,5 @@
 'use client'
 
-import Link from "next/link";
-    import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion } from "framer-motion";
 import { Building2, Menu } from "lucide-react";
@@ -20,6 +18,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { Link, usePathname } from "@/i18n/navigation";
 
 export function Navbar() {
   const t = useTranslations();
@@ -44,10 +43,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              <div className="absolute inset-0 rounded-lg bg-primary/20 blur-sm transition-all group-hover:blur-md" />
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-primary shadow-md transition-transform group-hover:scale-105">
-                <Building2 className="h-5 w-5 text-primary-foreground" />
-              </div>
+              <span className="text-2xl font-bold">🇹🇩</span>
             </div>
             <div className="hidden flex-col sm:flex">
               <span className="text-sm font-bold leading-tight text-foreground">
@@ -62,7 +58,7 @@ export function Navbar() {
             <NavigationMenu>
               <NavigationMenuList className="text-sm gap-6 space-x-0">
                 {navLinks.map((link) => {
-                  const isActive = pathname === link.path;
+                  const isActive = pathname === link.path || (link.path !== '/' && pathname.startsWith(link.path));
                   return (
                     <NavigationMenuItem key={link.path}>
                       <NavigationMenuLink asChild>
@@ -87,8 +83,6 @@ export function Navbar() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-2">
             <div className="hidden items-center space-x-2 sm:flex">
-              {/* <LanguageToggle /> */}
-              {/* <ThemeToggle /> */}
               <ThemeToggle />
               <LanguageSwitcher />
             </div>
@@ -105,9 +99,7 @@ export function Navbar() {
                   {/* Header */}
                   <div className="flex items-center justify-between py-6 border-b">
                     <div className="flex items-center space-x-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-primary">
-                        <Building2 className="h-4 w-4 text-primary-foreground" />
-                      </div>
+                      <span className="text-2xl font-bold">🇹🇩</span>
                       <div>
                         <span className="text-sm font-bold text-foreground">République du Tchad</span>
                         <p className="text-xs text-muted-foreground">Officials Directory</p>
@@ -119,7 +111,7 @@ export function Navbar() {
                   <div className="flex-1 py-6">
                     <nav className="space-y-2">
                       {navLinks.map((link) => {
-                        const isActive = pathname === link.path;
+                        const isActive = pathname === link.path || (link.path !== '/' && pathname.startsWith(link.path));
                         return (
                           <Link
                             key={link.path}
