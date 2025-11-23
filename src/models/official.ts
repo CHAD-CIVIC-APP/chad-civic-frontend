@@ -10,20 +10,18 @@ export interface ElectedOfficial {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  firstName: string;
-  lastName: string;
-  district: string;
-  biography?: string;
-  termStartDate: string;
-  termEndDate: string;
+  prenom: string; // firstName
+  nom: string; // lastName
+  circonscription: string; // district
+  biographie?: string; // biography
+  date_de_debut_du_mandat: string; // termStartDate
+  date_de_fin_du_mandat: string; // termEndDate
   email?: string;
-  phone?: string;
-  sourceLink?: string | null;
-  verified: boolean;
+  telephone?: string; // phone
+  lien_source?: string | null; // sourceLink
   region: Region;
-  position: Position;
-  political_party: PoliticalParty;
-  photo?: string | null;
+  fonction: Position; // position
+  parti: PoliticalParty; // political_party
 }
 
 /**

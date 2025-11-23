@@ -11,7 +11,6 @@ export interface Region {
   updatedAt: string;
   publishedAt: string;
   name: string;
-  code: string;
 }
 
 export interface Position {
@@ -21,7 +20,6 @@ export interface Position {
   updatedAt: string;
   publishedAt: string;
   name: string;
-  code: string;
   level: 'National' | 'Regional' | 'Local';
 }
 
