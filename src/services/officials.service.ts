@@ -17,10 +17,10 @@ export const getOfficials = async (params?: OfficialQueryParams): Promise<Electe
   // Add sorting
   if (params?.sort) queryParams['sort'] = params.sort;
 
-  // Add search (firstName or lastName)
+  // Add search (prenom or nom)
   if (params?.search) {
-    queryParams['filters[$or][0][firstName][$containsi]'] = params.search;
-    queryParams['filters[$or][1][lastName][$containsi]'] = params.search;
+    queryParams['filters[$or][0][prenom][$containsi]'] = params.search;
+    queryParams['filters[$or][1][nom][$containsi]'] = params.search;
   }
 
   // Add filters
@@ -29,13 +29,10 @@ export const getOfficials = async (params?: OfficialQueryParams): Promise<Electe
       queryParams['filters[region][id][$eq]'] = params.filters.region;
     }
     if (params.filters.position) {
-      queryParams['filters[position][id][$eq]'] = params.filters.position;
+      queryParams['filters[fonction][id][$eq]'] = params.filters.position;
     }
     if (params.filters.political_party) {
-      queryParams['filters[political_party][id][$eq]'] = params.filters.political_party;
-    }
-    if (params.filters.verified !== undefined) {
-      queryParams['filters[verified][$eq]'] = params.filters.verified;
+      queryParams['filters[parti][id][$eq]'] = params.filters.political_party;
     }
   }
 

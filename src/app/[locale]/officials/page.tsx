@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { Search, Mail, Phone, MapPin, Briefcase, CheckCircle } from "lucide-react";
+import { Search, Mail, Phone, MapPin, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
@@ -28,11 +28,11 @@ export default function OfficialsPage() {
     'search',
     parseAsString
   );
-  const [regionCode, setRegionCode] = useQueryState(
+  const [regionName, setRegionName] = useQueryState(
     'region',
     parseAsString
   );
-  const [positionCode, setPositionCode] = useQueryState(
+  const [positionName, setPositionName] = useQueryState(
     'position',
     parseAsString
   );
@@ -47,8 +47,9 @@ export default function OfficialsPage() {
   const { data: positions } = usePositions();
   const { data: parties } = usePoliticalParties();
 
-  const regionId = regionCode ? regions?.find(r => r.code === regionCode)?.id : undefined;
-  const positionId = positionCode ? positions?.find(p => p.code === positionCode)?.id : undefined;
+  // Convert names to IDs only for API call
+  const regionId = regionName ? regions?.find(r => r.name === regionName)?.id : undefined;
+  const positionId = positionName ? positions?.find(p => p.name === positionName)?.id : undefined;
   const partyId = partyAbbr ? parties?.find(p => p.abbreviation === partyAbbr)?.id : undefined;
 
   const queryParams = {
@@ -88,8 +89,8 @@ export default function OfficialsPage() {
 
             <div className="flex flex-wrap gap-3">
               <Select 
-                value={regionCode || "all"} 
-                onValueChange={(value) => setRegionCode(value === "all" ? null : value)}
+                value={regionName || "all"} 
+                onValueChange={(value) => setRegionName(value === "all" ? null : value)}
               >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder={t('search.region')} />
@@ -97,7 +98,7 @@ export default function OfficialsPage() {
                 <SelectContent>
                   <SelectItem value="all">{t('search.allRegions')}</SelectItem>
                   {regions?.map((r) => (
-                    <SelectItem key={r.id} value={r.code}>
+                    <SelectItem key={r.id} value={r.name}>
                       {r.name}
                     </SelectItem>
                   ))}
@@ -105,8 +106,8 @@ export default function OfficialsPage() {
               </Select>
 
               <Select 
-                value={positionCode || "all"} 
-                onValueChange={(value) => setPositionCode(value === "all" ? null : value)}
+                value={positionName || "all"} 
+                onValueChange={(value) => setPositionName(value === "all" ? null : value)}
               >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder={t('search.position')} />
@@ -114,7 +115,7 @@ export default function OfficialsPage() {
                 <SelectContent>
                   <SelectItem value="all">{t('search.allPositions')}</SelectItem>
                   {positions?.map((p) => (
-                    <SelectItem key={p.id} value={p.code}>
+                    <SelectItem key={p.id} value={p.name}>
                       {p.name}
                     </SelectItem>
                   ))}
@@ -138,13 +139,13 @@ export default function OfficialsPage() {
                 </SelectContent>
               </Select>
 
-              {(regionCode || positionCode || partyAbbr || searchInput) && (
+              {(regionName || positionName || partyAbbr || searchInput) && (
                 <Button
                   variant="ghost"
                   onClick={() => {
                     setSearchInput(null);
-                    setRegionCode(null);
-                    setPositionCode(null);
+                    setRegionName(null);
+                    setPositionName(null);
                     setPartyAbbr(null);
                   }}
                 >
@@ -179,14 +180,11 @@ export default function OfficialsPage() {
                         <div className="flex-1">
                           <div className="mb-2 flex items-center gap-2">
                             <h3 className="text-lg font-semibold text-foreground group-hover:text-primary">
-                              {official.firstName} {official.lastName}
+                              {official.prenom} {official.nom}
                             </h3>
-                            {official.verified && (
-                              <CheckCircle className="h-4 w-4 text-success" />
-                            )}
                           </div>
                           <Badge variant="secondary" className="mb-2">
-                            {official.position?.name}
+                            {official.fonction?.name}
                           </Badge>
                         </div>
                       </div>
@@ -194,11 +192,11 @@ export default function OfficialsPage() {
                       <div className="space-y-2 text-sm text-muted-foreground">
                         <div className="flex items-center gap-2">
                           <MapPin className="h-4 w-4" />
-                          <span>{official.region?.name} - {official.district}</span>
+                          <span>{`${official.region?.name} (${official.circonscription})`}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Briefcase className="h-4 w-4" />
-                          <span>{official.political_party?.abbreviation}</span>
+                          <span>{official.parti?.abbreviation}</span>
                         </div>
                         {official.email && (
                           <div className="flex items-center gap-2">
@@ -206,10 +204,10 @@ export default function OfficialsPage() {
                             <span className="truncate">{official.email}</span>
                           </div>
                         )}
-                        {official.phone && (
+                        {official.telephone && (
                           <div className="flex items-center gap-2">
                             <Phone className="h-4 w-4" />
-                            <span>{official.phone}</span>
+                            <span>{official.telephone}</span>
                           </div>
                         )}
                       </div>

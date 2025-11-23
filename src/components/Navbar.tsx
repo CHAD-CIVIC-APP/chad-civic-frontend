@@ -2,8 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from "framer-motion";
-import { Building2, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -39,11 +40,17 @@ export function Navbar() {
       className="sticky top-0 z-50 w-full border-b bg-card/80 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60 shadow-xs shadow-black/5 dark:shadow-black/20"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="relative">
-              <span className="text-2xl font-bold">🇹🇩</span>
+          <Link href="/" className="flex items-center group">
+            <div className="relative h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0">
+              <Image
+                src="/chad-civic-log.png"
+                alt="Chad Civic Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
             <div className="hidden flex-col sm:flex">
               <span className="text-sm font-bold leading-tight text-foreground">
@@ -98,8 +105,15 @@ export function Navbar() {
                 <div className="flex flex-col h-full">
                   {/* Header */}
                   <div className="flex items-center justify-between py-6 border-b">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-2xl font-bold">🇹🇩</span>
+                    <div className="flex items-center">
+                      <div className="relative h-10 w-10 flex-shrink-0">
+                        <Image
+                          src="/chad-civic-log.png"
+                          alt="Chad Civic Logo"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
                       <div>
                         <span className="text-sm font-bold text-foreground">République du Tchad</span>
                         <p className="text-xs text-muted-foreground">Officials Directory</p>

@@ -12,7 +12,6 @@ import {
   MapPin,
   Briefcase,
   Calendar,
-  CheckCircle,
   Copy,
   ExternalLink,
 } from "lucide-react";
@@ -74,17 +73,11 @@ export default function OfficialDetailPage({ params }: PageProps) {
                 <div>
                   <div className="mb-3 flex items-center gap-3">
                     <h1 className="text-3xl font-bold text-foreground">
-                      {official.firstName} {official.lastName}
+                      {official.prenom} {official.nom}
                     </h1>
-                    {official.verified && (
-                      <Badge variant="outline" className="gap-1 border-success text-success">
-                        <CheckCircle className="h-3 w-3" />
-                        {t('official.verified')}
-                      </Badge>
-                    )}
                   </div>
                   <Badge className="bg-gradient-primary text-primary-foreground">
-                    {official.position?.name}
+                    {official.fonction?.name}
                   </Badge>
                 </div>
               </div>
@@ -102,7 +95,7 @@ export default function OfficialDetailPage({ params }: PageProps) {
                   <Briefcase className="h-5 w-5 text-primary" />
                   <div>
                     <div className="text-xs text-muted-foreground">{t('official.district')}</div>
-                    <div className="font-medium">{official.district}</div>
+                    <div className="font-medium">{official.circonscription}</div>
                   </div>
                 </div>
 
@@ -110,39 +103,39 @@ export default function OfficialDetailPage({ params }: PageProps) {
                   <Briefcase className="h-5 w-5 text-primary" />
                   <div>
                     <div className="text-xs text-muted-foreground">{t('search.party')}</div>
-                    <div className="font-medium">{official.political_party?.name}</div>
+                    <div className="font-medium">{official.parti?.name}</div>
                   </div>
                 </div>
 
-                {official.termStartDate && (
+                {official.date_de_debut_du_mandat && (
                   <div className="flex items-center gap-3 rounded-lg bg-muted p-4">
                     <Calendar className="h-5 w-5 text-primary" />
                     <div>
                       <div className="text-xs text-muted-foreground">{t('official.term')}</div>
                       <div className="font-medium">
-                        {new Date(official.termStartDate).getFullYear()}
-                        {official.termEndDate && ` - ${new Date(official.termEndDate).getFullYear()}`}
+                        {new Date(official.date_de_debut_du_mandat).getFullYear()}
+                        {official.date_de_fin_du_mandat && ` - ${new Date(official.date_de_fin_du_mandat).getFullYear()}`}
                       </div>
                     </div>
                   </div>
                 )}
               </div>
 
-              {official.biography && (
+              {official.biographie && (
                 <div className="mb-6">
                   <h2 className="mb-3 text-xl font-semibold text-foreground">
                     {t('official.biography')}
                   </h2>
                   <div
                     className="prose prose-sm max-w-none text-muted-foreground"
-                    dangerouslySetInnerHTML={{ __html: official.biography }}
+                    dangerouslySetInnerHTML={{ __html: official.biographie }}
                   />
                 </div>
               )}
 
-              {official.sourceLink && (
+              {official.lien_source && (
                 <a
-                  href={official.sourceLink}
+                  href={official.lien_source}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
@@ -179,18 +172,18 @@ export default function OfficialDetailPage({ params }: PageProps) {
                   </div>
                 )}
 
-                {official.phone && (
+                {official.telephone && (
                   <div className="rounded-lg border bg-muted/50 p-4">
                     <div className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <Phone className="h-4 w-4" />
                       {t('official.phone')}
                     </div>
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-medium">{official.phone}</span>
+                      <span className="font-medium">{official.telephone}</span>
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => copyToClipboard(official.phone!)}
+                        onClick={() => copyToClipboard(official.telephone!)}
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
