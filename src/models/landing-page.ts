@@ -30,10 +30,8 @@ export interface LandingPageData {
  * Statistics response
  */
 export interface Statistics {
-  totalOfficials: number;
-  totalAnnouncements: number;
-  activeRegions: number;
-  totalPositions: number;
-  totalPoliticalParties: number;
+  officials: number;
+  regions: number;
+  positions: number;
 }
 
