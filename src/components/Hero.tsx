@@ -5,14 +5,16 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Users, MapPin, Briefcase } from "lucide-react";
 import Link from "next/link";
+import { useLandingPageStats } from '@/hooks/use-common';
 
 export function Hero() {
   const t = useTranslations();
+  const { data: statsData, isLoading } = useLandingPageStats();
 
   const stats = [
-    { icon: Users, label: t('hero.stats.officials'), value: "150+" },
-    { icon: MapPin, label: t('hero.stats.regions'), value: "23" },
-    { icon: Briefcase, label: t('hero.stats.positions'), value: "45+" },
+    { icon: Users, label: t('hero.stats.officials'), value: statsData?.officials.toString() || "0" },
+    { icon: MapPin, label: t('hero.stats.regions'), value: statsData?.regions.toString() || "0" },
+    { icon: Briefcase, label: t('hero.stats.positions'), value: statsData?.positions.toString() || "0" },
   ];
 
   return (
@@ -48,19 +50,33 @@ export function Hero() {
             transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
             className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-3"
           >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.25 + index * 0.08 }}
-                className="group border rounded-xl py-6 px-5 transition-all hover:shadow-elegant"
-              >
-                <stat.icon className="mx-auto mb-3 h-8 w-8 text-primary transition-transform group-hover:scale-110" />
-                <div className="text-3xl font-bold text-foreground">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </motion.div>
-            ))}
+            {isLoading ? (
+              // Loading skeleton with animate-pulse
+              Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="group border rounded-xl py-6 px-5 animate-pulse"
+                >
+                  <div className="mx-auto mb-3 h-3 w-12 bg-muted rounded" />
+                  <div className="h-6 bg-muted rounded mb-2 w-20 mx-auto" />
+                  <div className="h-4 bg-muted rounded w-24 mx-auto" />
+                </div>
+              ))
+            ) : (
+              stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.25 + index * 0.08 }}
+                  className="group border rounded-xl py-6 px-5 transition-all hover:shadow-elegant"
+                >
+                  <stat.icon className="mx-auto mb-3 h-8 w-8 text-primary transition-transform group-hover:scale-110" />
+                  <div className="text-3xl font-bold text-foreground">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                </motion.div>
+              ))
+            )}
           </motion.div>
         </div>
       </div>

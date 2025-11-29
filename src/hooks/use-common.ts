@@ -4,7 +4,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query-keys';
-import { getRegions, getPositions, getPoliticalParties } from '@/services/common.service';
+import { getRegions, getPositions, getPoliticalParties, getLandingPageStats } from '@/services/common.service';
 
 export const useRegions = () => {
   return useQuery({
@@ -24,6 +24,13 @@ export const usePoliticalParties = () => {
   return useQuery({
     queryKey: queryKeys.common.politicalParties,
     queryFn: getPoliticalParties,
+  });
+};
+
+export const useLandingPageStats = () => {
+  return useQuery({
+    queryKey: queryKeys.landingPage.statistics,
+    queryFn: getLandingPageStats,
   });
 };
 
